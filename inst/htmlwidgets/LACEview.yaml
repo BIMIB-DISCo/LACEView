@@ -1,0 +1,5 @@
+dependencies:
+- name: cy
+  version: 3.15.0
+  src: htmlwidgets
+  script: ./lib/cytoscape.min.js
