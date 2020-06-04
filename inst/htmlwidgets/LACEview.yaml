@@ -3,3 +3,11 @@ dependencies:
   version: 3.15.0
   src: htmlwidgets
   script: ./lib/cytoscape.min.js
+- name: cola
+  src: htmlwidgets
+  version: 3.4.0
+  script: ./lib/cola.min.js
+- name: cytoscape-cola
+  src: htmlwidgets
+  version: 1.1.0
+  script: ./lib/cytoscape-cola.js
