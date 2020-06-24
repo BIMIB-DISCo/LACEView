@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
+LACEview <- function(inference, width = NULL, height = NULL, elementId = 'cy') {
   B = inference$B
   adj_matrix = array(0L,c((dim(B)[1]-1),(dim(B)[2]-1)))
   rownames(adj_matrix) <- colnames(B)[(2:ncol(B))]
@@ -24,9 +24,9 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     }
 
   }
-
+  library('RColorBrewer')
   adjMatrix_base <- adj_matrix
-
+  colours = brewer.pal(n = nrow(inference$clones_prevalence), name = "Paired")
   elements = list()
   elements$nodes = list()
   elements$edges = list()
@@ -35,8 +35,10 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
       if(adjMatrix_base[row, col] == 1){
         data = list()
         data$data = list()
-        data$data$source = sprintf('%s_t%s',clone_labels[row],1)
-        data$data$target = sprintf('%s_t%s',clone_labels[col],1)
+        data$data$source = sprintf('%s_t%s',rownames(inference[["clones_prevalence"]])[row],1)
+        data$data$target = sprintf('%s_t%s',rownames(inference[["clones_prevalence"]])[col],1)
+        data$data$name = sprintf('%s',clone_labels[col],1)
+        data$data$color = colours[col]
         data$data$id = sprintf('%s_%s',data$data$source,data$data$target)
         data$data$linestyle = "solid"
         elements$edges = c(elements$edges,list(data))
@@ -46,16 +48,21 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
   for(col in 1:(ncol(inference$clones_prevalence)-1)) {
     data = list()
     data$data = list()
-    data$data$id = sprintf('t%s',col)
-    data$data$name = sprintf('t%s',col)
+    data$data$id = sprintf('T%s',col)
+    data$data$name = sprintf('T%s',col)
+    data$data$color = "#FFFFFF"
+    data$data$size = sprintf('%spx',50)
+    data$data$prev = sprintf('%s [%s]',data$data$name,round(inference$clones_prevalence[row,col],2))
     parent = data$data$name
     elements$nodes = c(elements$nodes,list(data))
     for(row in 1:nrow(inference$clones_prevalence)) {
       data = list()
       data$data = list()
-      data$data$name = clone_labels[row]
-      data$data$id = sprintf('%s_t%s',clone_labels[row],col)
-      data$data$prev = sprintf('%s',round(inference$clones_prevalence[row,col],2))
+      data$data$name = rownames(inference[["clones_prevalence"]])[row]
+      data$data$color = colours[row]
+      data$data$id = sprintf('%s_t%s',rownames(inference[["clones_prevalence"]])[row],col)
+      data$data$size = sprintf('%spx',5+as.integer(inference$clones_prevalence[row,col]*150))
+      data$data$prev = sprintf('%s [%s]',data$data$name,round(inference$clones_prevalence[row,col],2))
       data$data$parent = parent
       elements$nodes = c(elements$nodes,list(data))
     }
@@ -63,14 +70,16 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
   for(row in 1:(nrow(inference$clones_prevalence))) {
     for(col in 1:(ncol(inference$clones_prevalence)-1)) {
       if(col == 1){
-        source = sprintf('%s_t%s',clone_labels[row],col)
+        source = sprintf('%s_t%s',rownames(inference[["clones_prevalence"]])[row],col)
         next
       }
-      target = sprintf('%s_t%s',clone_labels[row],col)
+      target = sprintf('%s_t%s',rownames(inference[["clones_prevalence"]])[row],col)
       data = list()
       data$data = list()
       data$data$source = source
       data$data$id = sprintf('%s_%s',source,target)
+      data$data$name = sprintf('')
+      data$data$color = colours[row]
       data$data$target = target
       data$data$linestyle = "dashed"
       source = target
@@ -78,7 +87,7 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     }
   }
 
-  print(elements)
+  
   # forward options using x
   x = list(
     elements = elements
@@ -93,6 +102,7 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     package = 'LACEview',
     elementId = elementId
   )
+  
 }
 
 #' Shiny bindings for LACEview

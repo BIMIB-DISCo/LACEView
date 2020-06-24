@@ -1,13 +1,25 @@
 dependencies:
+- name: jquery
+  src: htmlwidgets
+  version: 1.9.1
+  script: ./lib/jquery.min.js
+- name: layout
+  src: htmlwidgets
+  version: 1.4.3
+  script: ./lib/jquery.layout.min.js
 - name: cy
   version: 3.15.0
   src: htmlwidgets
   script: ./lib/cytoscape.min.js
-- name: cola
+- name: bootstrap
+  version: 3.3.7
   src: htmlwidgets
-  version: 3.4.0
-  script: ./lib/cola.min.js
-- name: cytoscape-cola
+  script: ./lib/bootstrap.min.js
+- name: dagre
+  src: htmlwidgets
+  version: 0.1
+  script: ./lib/dagre.min.js
+- name: cytoscape-dagre
   src: htmlwidgets
   version: 1.1.0
-  script: ./lib/cytoscape-cola.js
+  script: ./lib/cytoscape-dagre.js
