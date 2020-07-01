@@ -95,6 +95,60 @@ HTMLWidgets.widget({
                         cy.edges().style('opacity','1');
                     });
                     runLayout(true);
+                    var makeTippy = function(node, text){
+                var ref = node.popperRef();
+
+                // unfortunately, a dummy element must be passed
+                // as tippy only accepts a dom element as the target
+                // https://github.com/atomiks/tippyjs/issues/661
+                var dummyDomEle = document.createElement('div');
+
+                var tip = tippy( dummyDomEle, {
+                    onCreate: function(instance){ // mandatory
+                        // patch the tippy's popper reference so positioning works
+                        // https://atomiks.github.io/tippyjs/misc/#custom-position
+                        instance.popperInstance.reference = ref;
+                    },
+                    lazy: false, // mandatory
+                    trigger: 'manual', // mandatory
+
+                    // dom element inside the tippy:
+                    content: function(){ // function can be better for performance
+                        var div = document.createElement('div');
+
+                        div.innerHTML = text;
+
+                        return div;
+                    },
+
+                    // your own preferences:
+                    arrow: true,
+                    placement: 'bottom',
+                    hideOnClick: false,
+                    multiple: true,
+                    sticky: true,
+
+                    // if interactive:
+                    interactive: true,
+                    appendTo: document.body // or append dummyDomEle to document.body
+                } );
+
+                return tip;
+            };
+
+            var tip;
+
+            cy.nodes().on('mouseover',function (e) {
+
+                if(!cy.$("#"+e.target.id()).isParent()){
+                    if(tip !== undefined){
+                        tip.destroy();
+                    }
+                    tip = makeTippy(cy.$("#"+e.target.id()),cy.$("#"+e.target.id()).data()["prev"]);
+                    tip.show();
+
+                }
+            });
                 }
             });
             

@@ -23,3 +23,20 @@ dependencies:
   src: htmlwidgets
   version: 1.1.0
   script: ./lib/cytoscape-dagre.js
+- name: popper
+  src: htmlwidgets
+  version: 1.16
+  script: ./lib/popper.js
+- name: tippy
+  src: htmlwidgets
+  version: 0.52
+  script: ./lib/tippy.js
+- name: tippcss
+  src: htmlwidgets
+  version: 1.1.0
+  script: ./lib/tippy.css
+- name: cytoscape-popper
+  src: htmlwidgets
+  version: 1.1.0
+  script: ./lib/cytoscape-popper.js
+
