@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-LACEview <- function(inference, width = NULL, height = NULL, elementId = 'cy') {
+LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
   B = inference$B
   adj_matrix = array(0L,c((dim(B)[1]-1),(dim(B)[2]-1)))
   rownames(adj_matrix) <- colnames(B)[(2:ncol(B))]
@@ -88,15 +88,34 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = 'cy') {
   }
 
   
+  library(jsonlite)
+  clonalprev_df <- inference$clones_prevalence;
+  clonalprev_df <- subset(clonalprev_df,select = -c(Total));
+  clonalprev_df_names <- rownames(clonalprev_df);
+  stream_df <- data.frame("Time"=c(1:ncol(clonalprev_df)))
+  for(k in clonalprev_df_names){
+    temp <- data.frame(k=clonalprev_df[k,],stringsAsFactors = FALSE)
+    stream_df <- cbind(stream_df,temp)
+  }
+  
+  names(stream_df) <- c("Time",clonalprev_df_names)
+  colours = brewer.pal(n = nrow(inference$clones_prevalence), name = "Paired")
+  stream_df_colors = list()
+  for(K in 1:length(colours)){
+    stream_df_colors[[clonalprev_df_names[K]]] = colours[K]
+  }
   # forward options using x
-  x = list(
-    elements = elements
+  jsdata = list(
+    elements = elements,
+    data = toJSON(stream_df),
+    columns = toJSON(names(stream_df)),
+    colors = toJSON(stream_df_colors)
   )
 
   # create widget
   htmlwidgets::createWidget(
     name = 'LACEview',
-    x,
+    jsdata,
     width = width,
     height = height,
     package = 'LACEview',
@@ -105,6 +124,17 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = 'cy') {
   
 }
 
+LACEview_html <- function(id, style, class, ...) {
+  htmltools::tags$div(
+    id = id, class = class, style = style,
+    htmltools::div(
+      # style = sprintf("display: flex; width:%s; height:%s;",width,height),
+      style = "display: flex; height:100%; width:100%;",
+      htmltools::div(style = "flex: 50%;",id="cy"),
+      htmltools::div(style = "flex: 50%;",id="streamgraph")
+    )
+  )
+}
 #' Shiny bindings for LACEview
 #'
 #' Output and render functions for using LACEview within Shiny

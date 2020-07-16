@@ -39,4 +39,13 @@ dependencies:
   src: htmlwidgets
   version: 1.1.0
   script: ./lib/cytoscape-popper.js
+- name: d3
+  src: htmlwidgets
+  version: 4
+  script: ./lib/d3.v4.js
+- name: d3-scale-chromatic
+  src: htmlwidgets
+  version: 1
+  script: ./lib/d3-scale-chromatic.v1.min.js
+
 
