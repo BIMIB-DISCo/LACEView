@@ -102,11 +102,19 @@ HTMLWidgets.widget({
         }
         var mousemove = function(d,i) {
             grp = keys[i]
+            console.log('#'+keys[i]+'_t1')
+            console.log(cy.$('#'+keys[i]+'_t1'))
+            cy.nodes().style('opacity','0.2');
+            cy.edges().style('opacity','0.2');
+            cy.$(':parent').style('opacity','1');
+            cy.$('#'+keys[i]+'_t1').style('opacity','1');
             Tooltip.text(grp)
         }
         var mouseleave = function(d) {
             Tooltip.style("opacity", 0)
             d3.selectAll(".myArea").style("opacity", 1).style("stroke", "none")
+            cy.nodes().style('opacity','1');
+            cy.edges().style('opacity','1');
         }
 
         // Area generator
@@ -198,6 +206,57 @@ HTMLWidgets.widget({
                         dagre_layout.run();
 
                     }
+                    cy.cxtmenu({
+                        selector: 'node',
+
+                        commands: [
+                            {
+                                content: '<span class="fa fa-flash fa-2x"></span>',
+                                select: function(ele){
+                                    console.log( ele.id() );
+                                }
+                            },
+
+                            {
+                                content: '<span class="fa fa-star fa-2x"></span>',
+                                select: function(ele){
+                                    console.log( ele.data('name') );
+                                },
+                                enabled: false
+                            },
+
+                            {
+                                content: 'Text',
+                                select: function(ele){
+                                    console.log( ele.position() );
+                                }
+                            }
+                        ]
+                    });
+
+                    cy.cxtmenu({
+                        selector: 'core',
+
+                        commands: [
+                            {
+                                content: 'bg1',
+                                select: function(){
+                                    console.log( 'bg1' );
+                                }
+                            },
+
+                            {
+                                content: 'bg2',
+                                select: function(){
+                                    console.log( 'bg2' );
+                                }
+                            }
+                        ]
+                    });
+                    
+                    //function selectNode(node){
+                      //cy.$('#'+node)
+                    //}
                     cy.edges().on('mouseover',function (e) {
                         console.log('c');
                         cy.nodes().style('opacity','0.2');
@@ -208,12 +267,13 @@ HTMLWidgets.widget({
                         cy.$('#'+e.target.id()).target().successors().style('opacity','1');
                     });
                     cy.edges().on('mouseout',function (e) {
-                        console.log('c');
+                        console.log(e.target.id());
                         cy.nodes().style('opacity','1');
                         cy.edges().style('opacity','1');
                     });
                     runLayout(true);
                     var makeTippy = function(node, text){
+                      
                 var ref = node.popperRef();
 
                 // unfortunately, a dummy element must be passed

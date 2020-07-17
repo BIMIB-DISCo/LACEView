@@ -99,7 +99,6 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
   }
   
   names(stream_df) <- c("Time",clonalprev_df_names)
-  colours = brewer.pal(n = nrow(inference$clones_prevalence), name = "Paired")
   stream_df_colors = list()
   for(K in 1:length(colours)){
     stream_df_colors[[clonalprev_df_names[K]]] = colours[K]

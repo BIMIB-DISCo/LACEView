@@ -47,5 +47,8 @@ dependencies:
   src: htmlwidgets
   version: 1
   script: ./lib/d3-scale-chromatic.v1.min.js
-
+- name: cytoscape-cxtmenu
+  src: htmlwidgets
+  version: 1
+  script: ./lib/cytoscape-cxtmenu.js
 
