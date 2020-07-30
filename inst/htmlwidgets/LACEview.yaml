@@ -15,6 +15,10 @@ dependencies:
   version: 3.3.7
   src: htmlwidgets
   script: ./lib/bootstrap.min.js
+- name: bootstrap-css
+  version: 3.3.7
+  src: htmlwidgets
+  script: ./lib/bootstrap.min.css
 - name: dagre
   src: htmlwidgets
   version: 0.1

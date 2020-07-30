@@ -10,24 +10,11 @@ HTMLWidgets.widget({
     return {
 
       renderValue: function(jsdata) {
-        /*
-        var Cont = document.getElementById('cy');
-        var panel = document.createElement('div');
-        panel.style.display = 'flex';
-        var leftpanel = document.createElement('div');
-        leftpanel.style.flex = '50%';
-        leftpanel.id = "cyto"
-        var rightpanel = document.createElement('div');
-        rightpanel.style.flex = '50%';
-        Cont.appendChild(panel);
-        panel.appendChild(leftpanel);
-        panel.appendChild(rightpanel);
-        */
         var D = jsdata["data"]
         var E = jsdata["columns"]
         var F = jsdata["colors"]
         // set the dimensions and margins of the graph
-        var margin = {top: 20, right: 30, bottom: 0, left: 10},
+        var margin = {top: 20, right: 30, bottom: 20, left: 10},
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
@@ -42,10 +29,8 @@ HTMLWidgets.widget({
 
     // Parse the Data
     d3.csv("./data.csv", function(data) {
-        console.log(data)
-        console.log(data.columns.slice(1))
+
         data = D
-        console.log(data)
 
         // List of groups = header of the csv files
         var keys = E.slice(1).reverse()
@@ -56,27 +41,15 @@ HTMLWidgets.widget({
         // Add Y axis
         var y = d3.scaleLinear()
             .domain(d3.extent(data, function(d) { return d.Time; }))
-            .range([ 0, width ]);
-        svg.append("g")
-            .attr("transform", "translate("+width*0.8 + ",0)")
-            .call(d3.axisRight(y).tickSize(-width*.6).tickValues([1, 2, 3, 4]))
-            .select(".domain").remove()
-        // Customization
-        svg.selectAll(".tick line").attr("stroke", "#b8b8b8")
-
-        // Add Y axis label:
-        svg.append("text")
-            .attr("text-anchor", "end")
-            .attr("x", width)
-            .attr("y", height-30 )
-            .text("Time point");
+            .range([ 0, height ]);
+        
 
 
 
         // color palette
-        var color = d3.scaleOrdinal()
-            .domain(keys)
-            .range(d3.schemeDark2);
+        //var color = d3.scaleOrdinal()
+          //  .domain(keys)
+            //.range(d3.schemeDark2);
 
         //stack the data?
         var stackedData = d3.stack()
@@ -102,12 +75,17 @@ HTMLWidgets.widget({
         }
         var mousemove = function(d,i) {
             grp = keys[i]
-            console.log('#'+keys[i]+'_t1')
-            console.log(cy.$('#'+keys[i]+'_t1'))
-            cy.nodes().style('opacity','0.2');
             cy.edges().style('opacity','0.2');
+            cy.nodes().forEach(function( ele ){
+              if (ele.id().indexOf(keys[i]) !== -1) {
+                ele.style('opacity','1');
+              }
+              else{
+                ele.style('opacity','0.2');
+              }
+            });
             cy.$(':parent').style('opacity','1');
-            cy.$('#'+keys[i]+'_t1').style('opacity','1');
+            //cy.$('#'+keys[i]+'_t1').style('opacity','1');
             Tooltip.text(grp)
         }
         var mouseleave = function(d) {
@@ -116,7 +94,23 @@ HTMLWidgets.widget({
             cy.nodes().style('opacity','1');
             cy.edges().style('opacity','1');
         }
+        
+        var tickmouseover = function (d) {
+            d3.selectAll(".tick").style("opacity", .2);
+            d3.select(this).style("opacity", 1);
+            cy.nodes().style('opacity','0.2');
+            cy.edges().style('opacity','0.2');
+            cy.$('#T'+d).style('opacity','1');
+            cy.$('#T'+d).children().style('opacity','1');
+            cy.$('#T'+d).children().connectedEdges().style('opacity','1');
+        }
 
+        var tickmouseout = function (d) {
+            d3.selectAll(".tick").style("opacity", 1);
+            cy.nodes().style('opacity','1');
+            cy.edges().style('opacity','1');
+        }
+        
         // Area generator
         var area = d3.area()
             .y(function(d) { return y(d.data.Time); })
@@ -135,6 +129,21 @@ HTMLWidgets.widget({
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
+        
+        svg.append("g")
+            .attr("transform", "translate("+width*0.7 + ",0)")
+            .call(d3.axisRight(y).tickSize(-width*.6).tickValues([1, 2, 3, 4]).tickFormat(d3.format("d")))
+            .select(".domain").remove()
+        // Customization
+        svg.selectAll(".tick line").attr("stroke", "#000000")
+
+        svg.selectAll(".tick").on("mouseover", tickmouseover).on("mouseout", tickmouseout)
+        // Add Y axis label:
+        svg.append("text")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", 0 )
+            .text("Time point")
 
     })        
         var cy = window.cy = cytoscape({
@@ -206,6 +215,13 @@ HTMLWidgets.widget({
                         dagre_layout.run();
 
                     }
+                    function addtable(){
+                      var tablecontainer =  document.getElementById("lacetable")
+                      console.log(tablecontainer)
+                      
+                      tablecontainer.innerHTML="<p style='font-size:1em;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt massa eu ligula ornare, ac eleifend odio ullamcorper. Mauris imperdiet elit vel tortor pharetra efficitur. Vestibulum varius sagittis nibh, at vestibulum diam maximus non. Cras interdum neque quam, eu rutrum odio elementum eget. Vestibulum non diam sit amet metus mollis consequat a a nibh. Sed ornare est eu neque tempor, a condimentum quam tincidunt. Mauris varius libero nec posuere viverra. Sed tempus justo non ante viverra rutrum. Quisque venenatis fermentum tincidunt.</p>";
+                    }
+                    addtable();
                     cy.cxtmenu({
                         selector: 'node',
 
@@ -258,18 +274,36 @@ HTMLWidgets.widget({
                       //cy.$('#'+node)
                     //}
                     cy.edges().on('mouseover',function (e) {
-                        console.log('c');
                         cy.nodes().style('opacity','0.2');
                         cy.edges().style('opacity','0.2');
                         cy.$(':parent').style('opacity','1');
                         cy.$('#'+e.target.id()).style('opacity','1');
                         cy.$('#'+e.target.id()).target().style('opacity','1');
+                        var str = "";
+                        cy.$('#'+e.target.id()).target().predecessors().forEach(function( ele ){
+                          ele.style('opacity','1');
+                          if(ele.isEdge()){
+                            if(ele.data()["name"] !== ""){
+                              str = ele.data()["name"] +" " +str; 
+                            }
+                          }
+                        });
+                        console.log(str);
+                        var tablecontainer =  document.getElementById("lacetable")
+                      console.log(tablecontainer)
+                      
+                      tablecontainer.innerHTML=str;
+                    
                         cy.$('#'+e.target.id()).target().successors().style('opacity','1');
                     });
                     cy.edges().on('mouseout',function (e) {
-                        console.log(e.target.id());
                         cy.nodes().style('opacity','1');
                         cy.edges().style('opacity','1');
+                        var tablecontainer =  document.getElementById("lacetable")
+                      console.log(tablecontainer)
+                      
+                      tablecontainer.innerHTML="<p style='font-size:1em;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt massa eu ligula ornare, ac eleifend odio ullamcorper. Mauris imperdiet elit vel tortor pharetra efficitur. Vestibulum varius sagittis nibh, at vestibulum diam maximus non. Cras interdum neque quam, eu rutrum odio elementum eget. Vestibulum non diam sit amet metus mollis consequat a a nibh. Sed ornare est eu neque tempor, a condimentum quam tincidunt. Mauris varius libero nec posuere viverra. Sed tempus justo non ante viverra rutrum. Quisque venenatis fermentum tincidunt.</p>";
+                    
                     });
                     runLayout(true);
                     var makeTippy = function(node, text){
@@ -315,7 +349,7 @@ HTMLWidgets.widget({
             };
 
             var tip;
-
+          
             cy.nodes().on('mouseover',function (e) {
 
                 if(!cy.$("#"+e.target.id()).isParent()){

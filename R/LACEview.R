@@ -118,7 +118,12 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     width = width,
     height = height,
     package = 'LACEview',
-    elementId = elementId
+    elementId = elementId,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      viewer.padding = 0,
+      viewer.paneHeight = 500,
+      browser.fill = TRUE
+    )
   )
   
 }
@@ -129,8 +134,9 @@ LACEview_html <- function(id, style, class, ...) {
     htmltools::div(
       # style = sprintf("display: flex; width:%s; height:%s;",width,height),
       style = "display: flex; height:100%; width:100%;",
-      htmltools::div(style = "flex: 50%;",id="cy"),
-      htmltools::div(style = "flex: 50%;",id="streamgraph")
+      htmltools::div(style = "flex: 35%;",id="cy"),
+      htmltools::div(style = "flex: 35%;display:flex;align-items: center;",id="streamgraph"),
+      htmltools::div(style = "flex: 30%;display:flex;align-items: center;",id="lacetable")
     )
   )
 }
