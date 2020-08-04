@@ -18,7 +18,7 @@ dependencies:
 - name: bootstrap-css
   version: 3.3.7
   src: htmlwidgets
-  script: ./lib/bootstrap.min.css
+  stylesheet: ./lib/bootstrap.min.css
 - name: dagre
   src: htmlwidgets
   version: 0.1
@@ -38,7 +38,7 @@ dependencies:
 - name: tippcss
   src: htmlwidgets
   version: 1.1.0
-  script: ./lib/tippy.css
+  stylesheet: ./lib/tippy.css
 - name: cytoscape-popper
   src: htmlwidgets
   version: 1.1.0

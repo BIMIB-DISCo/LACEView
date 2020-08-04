@@ -23,7 +23,7 @@
   <key id="e_label" for="edge" attr.name="label" attr.type="string"/>
   <key id="e_lty" for="edge" attr.name="lty" attr.type="double"/>
   <graph id="G" edgedefault="directed">
-    <data key="g_layout">0.60039603960396</data>
+    <data key="g_layout">0.544950495049505</data>
     <node id="n0">
       <data key="v_name">T1-ARPC2_2_218249894_C_T</data>
       <data key="v_branch_level">1</data>

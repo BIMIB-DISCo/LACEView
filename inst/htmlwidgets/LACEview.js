@@ -13,13 +13,14 @@ HTMLWidgets.widget({
         var D = jsdata["data"]
         var E = jsdata["columns"]
         var F = jsdata["colors"]
+       
         // set the dimensions and margins of the graph
         var margin = {top: 20, right: 30, bottom: 20, left: 10},
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
-
-    // append the svg object to the body of the page
-    var svg = d3.select("#streamgraph")
+      
+        // append the svg object to the body of the page
+        var svg = d3.select("#streamgraph")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -27,8 +28,6 @@ HTMLWidgets.widget({
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    // Parse the Data
-    d3.csv("./data.csv", function(data) {
 
         data = D
 
@@ -42,14 +41,7 @@ HTMLWidgets.widget({
         var y = d3.scaleLinear()
             .domain(d3.extent(data, function(d) { return d.Time; }))
             .range([ 0, height ]);
-        
-
-
-
-        // color palette
-        //var color = d3.scaleOrdinal()
-          //  .domain(keys)
-            //.range(d3.schemeDark2);
+      
 
         //stack the data?
         var stackedData = d3.stack()
@@ -145,7 +137,7 @@ HTMLWidgets.widget({
             .attr("y", 0 )
             .text("Time point")
 
-    })        
+       
         var cy = window.cy = cytoscape({
           container:document.getElementById('cy'),
           boxSelectionEnabled: false,
