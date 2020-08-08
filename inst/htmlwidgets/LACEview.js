@@ -214,6 +214,12 @@ HTMLWidgets.widget({
                       tablecontainer.innerHTML="<p style='font-size:1em;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt massa eu ligula ornare, ac eleifend odio ullamcorper. Mauris imperdiet elit vel tortor pharetra efficitur. Vestibulum varius sagittis nibh, at vestibulum diam maximus non. Cras interdum neque quam, eu rutrum odio elementum eget. Vestibulum non diam sit amet metus mollis consequat a a nibh. Sed ornare est eu neque tempor, a condimentum quam tincidunt. Mauris varius libero nec posuere viverra. Sed tempus justo non ante viverra rutrum. Quisque venenatis fermentum tincidunt.</p>";
                     }
                     addtable();
+                    
+                    function addnavbar(){
+                      var navbar = document.getElementById("navbar");
+                      navbar.innerHTML = '<nav class="navbar navbar-dark bg-dark" style="display: flex;justify-content: flex-end;"><button class="btn btn-outline-success" type="button" style="float:right">Main button</button></nav>'              
+                      }
+                    addnavbar();
                     cy.cxtmenu({
                         selector: 'node',
 
@@ -350,6 +356,7 @@ HTMLWidgets.widget({
                     }
                     tip = makeTippy(cy.$("#"+e.target.id()),cy.$("#"+e.target.id()).data()["prev"]);
                     tip.show();
+                    setTimeout(function(){  tip.destroy(); }, 1000);
 
                 }
             });

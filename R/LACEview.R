@@ -132,12 +132,17 @@ LACEview_html <- function(id, style, class, ...) {
   htmltools::tags$div(
     id = id, class = class, style = style,
     htmltools::div(
+    id="wrapper",
+    style = "height:100%; width:100%;",
+    htmltools::div(id="navbar"),
+    htmltools::div(
       # style = sprintf("display: flex; width:%s; height:%s;",width,height),
+      id="container",
       style = "display: flex; height:100%; width:100%;",
-      htmltools::div(style = "flex: 35%;",id="cy"),
+      htmltools::div(style = "flex:35%;display:flex;align-items: center;height:100%;",id="cy"),
       htmltools::div(style = "flex: 35%;display:flex;align-items: center;",id="streamgraph"),
       htmltools::div(style = "flex: 30%;display:flex;align-items: center;",id="lacetable")
-    )
+    ))
   )
 }
 #' Shiny bindings for LACEview
