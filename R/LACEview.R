@@ -108,7 +108,8 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     elements = elements,
     data = toJSON(stream_df),
     columns = toJSON(names(stream_df)),
-    colors = toJSON(stream_df_colors)
+    colors = toJSON(stream_df_colors),
+    clone_labels = toJSON(clone_labels)
   )
 
   # create widget

@@ -209,68 +209,44 @@ HTMLWidgets.widget({
                     }
                     function addtable(){
                       var tablecontainer =  document.getElementById("lacetable")
-                      console.log(tablecontainer)
+        
                       
                       tablecontainer.innerHTML="<p style='font-size:1em;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt massa eu ligula ornare, ac eleifend odio ullamcorper. Mauris imperdiet elit vel tortor pharetra efficitur. Vestibulum varius sagittis nibh, at vestibulum diam maximus non. Cras interdum neque quam, eu rutrum odio elementum eget. Vestibulum non diam sit amet metus mollis consequat a a nibh. Sed ornare est eu neque tempor, a condimentum quam tincidunt. Mauris varius libero nec posuere viverra. Sed tempus justo non ante viverra rutrum. Quisque venenatis fermentum tincidunt.</p>";
                     }
                     addtable();
                     
+                    let mutdict = {}
+                    function getGene(){
+                      for (var name of jsdata["clone_labels"]){
+                        var request = new XMLHttpRequest();
+                        request.open('GET', 'https://rest.ensembl.org/xrefs/symbol/homo_sapiens/'+name+'?content-type=application/json', false);
+                        request.send(null);
+
+                        if (request.status === 200) {
+                            var data = JSON.parse(request.responseText);
+                            console.log(data[0]["id"]);
+                            var request2 = new XMLHttpRequest();
+                            request2.open('GET', 'http://rest.ensembl.org/lookup/id/'+data[0]["id"]+'?content-type=application/json', false);
+                            request2.send(null);
+                            if (request2.status === 200) {
+                                var data2 = JSON.parse(request2.responseText);
+                                console.log(data2);
+                                mutdict[name] = data2;
+                            }
+                        }
+                    }
+                    
+                    console.log(mutdict)
+                    }
+                    getGene();
+                    
+                    
                     function addnavbar(){
                       var navbar = document.getElementById("navbar");
-                      navbar.innerHTML = '<nav class="navbar navbar-dark bg-dark" style="display: flex;justify-content: flex-end;"><button class="btn btn-outline-success" type="button" style="float:right">Main button</button></nav>'              
+                      navbar.innerHTML = '<nav class="navbar navbar-dark bg-dark" style="display: flex;justify-content: space-between;"><h2 style="color:#f5f6fa">LACEview</h2><button class="btn btn-outline-success" type="button">Main button</button></nav>'              
                       }
                     addnavbar();
-                    cy.cxtmenu({
-                        selector: 'node',
 
-                        commands: [
-                            {
-                                content: '<span class="fa fa-flash fa-2x"></span>',
-                                select: function(ele){
-                                    console.log( ele.id() );
-                                }
-                            },
-
-                            {
-                                content: '<span class="fa fa-star fa-2x"></span>',
-                                select: function(ele){
-                                    console.log( ele.data('name') );
-                                },
-                                enabled: false
-                            },
-
-                            {
-                                content: 'Text',
-                                select: function(ele){
-                                    console.log( ele.position() );
-                                }
-                            }
-                        ]
-                    });
-
-                    cy.cxtmenu({
-                        selector: 'core',
-
-                        commands: [
-                            {
-                                content: 'bg1',
-                                select: function(){
-                                    console.log( 'bg1' );
-                                }
-                            },
-
-                            {
-                                content: 'bg2',
-                                select: function(){
-                                    console.log( 'bg2' );
-                                }
-                            }
-                        ]
-                    });
-                    
-                    //function selectNode(node){
-                      //cy.$('#'+node)
-                    //}
                     cy.edges().on('mouseover',function (e) {
                         cy.nodes().style('opacity','0.2');
                         cy.edges().style('opacity','0.2');
@@ -282,7 +258,7 @@ HTMLWidgets.widget({
                           ele.style('opacity','1');
                           if(ele.isEdge()){
                             if(ele.data()["name"] !== ""){
-                              str = ele.data()["name"] +" " +str; 
+                              str = '<button class="btn btn-outline-success" type="button" style="float:right;margin: 5px;">'+ ele.data()["name"] +"</button> " +str; 
                             }
                           }
                         });
@@ -304,6 +280,15 @@ HTMLWidgets.widget({
                     
                     });
                     runLayout(true);
+                    
+                    cy.edges().on('cxttap',function(e){
+                       if(cy.$('#'+e.target.id()).data()["name"] !== ""){
+                         console.log(mutdict[cy.$('#'+e.target.id()).data()["name"]])
+                         var tablecontainer =  document.getElementById("lacetable")
+                         tablecontainer.innerHTML = '<div class="card" style="width: 18rem;"><div class="card-body"><h5 class="card-title">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["display_name"]+'</h5><h6 class="card-subtitle mb-2 text-muted">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'</h6><p class="card-text">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["description"]+'</p><button class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["assembly_name"]+'</button><button class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["source"]+'</button>  </div></div>'
+                         }
+                    });
+                    
                     var makeTippy = function(node, text){
                       
                 var ref = node.popperRef();
@@ -347,7 +332,7 @@ HTMLWidgets.widget({
             };
 
             var tip;
-          
+            
             cy.nodes().on('mouseover',function (e) {
 
                 if(!cy.$("#"+e.target.id()).isParent()){
@@ -364,7 +349,7 @@ HTMLWidgets.widget({
             });
             
             document.getElementById(el.id).cy = cy;
-
+            
       },
 
       resize: function(width, height) {
