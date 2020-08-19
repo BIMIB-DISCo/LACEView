@@ -120,11 +120,12 @@ LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
     height = height,
     package = 'LACEview',
     elementId = elementId,
-    sizingPolicy = htmlwidgets::sizingPolicy(
-      viewer.padding = 0,
-      viewer.paneHeight = 500,
-      browser.fill = TRUE
-    )
+    sizingPolicy = htmlwidgets::sizingPolicy(viewer.suppress = TRUE,
+                                             knitr.figure = FALSE,
+                                             browser.fill = TRUE,
+                                             browser.padding = 0,
+                                             knitr.defaultWidth = 800,
+                                             knitr.defaultHeight = 600)
   )
   
 }

@@ -243,7 +243,8 @@ HTMLWidgets.widget({
                     
                     function addnavbar(){
                       var navbar = document.getElementById("navbar");
-                      navbar.innerHTML = '<nav class="navbar navbar-dark bg-dark" style="display: flex;justify-content: space-between;"><h2 style="color:#f5f6fa">LACEview</h2><button class="btn btn-outline-success" type="button">Main button</button></nav>'              
+                      navbar.innerHTML = '<nav class="navbar navbar-dark bg-dark" style="display: flex;justify-content: space-between;"><h2 style="color:#f5f6fa">LACEview</h2><button class="btn btn-outline-success" type="button"  data-toggle="modal" data-target=".bd-example-modal-lg">info</button><div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg" ><div class="modal-content">  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </div>  </div></div></nav>'  
+                      
                       }
                     addnavbar();
 
@@ -273,10 +274,6 @@ HTMLWidgets.widget({
                     cy.edges().on('mouseout',function (e) {
                         cy.nodes().style('opacity','1');
                         cy.edges().style('opacity','1');
-                        var tablecontainer =  document.getElementById("lacetable")
-                      console.log(tablecontainer)
-                      
-                      tablecontainer.innerHTML="<p style='font-size:1em;'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt massa eu ligula ornare, ac eleifend odio ullamcorper. Mauris imperdiet elit vel tortor pharetra efficitur. Vestibulum varius sagittis nibh, at vestibulum diam maximus non. Cras interdum neque quam, eu rutrum odio elementum eget. Vestibulum non diam sit amet metus mollis consequat a a nibh. Sed ornare est eu neque tempor, a condimentum quam tincidunt. Mauris varius libero nec posuere viverra. Sed tempus justo non ante viverra rutrum. Quisque venenatis fermentum tincidunt.</p>";
                     
                     });
                     runLayout(true);
@@ -285,7 +282,7 @@ HTMLWidgets.widget({
                        if(cy.$('#'+e.target.id()).data()["name"] !== ""){
                          console.log(mutdict[cy.$('#'+e.target.id()).data()["name"]])
                          var tablecontainer =  document.getElementById("lacetable")
-                         tablecontainer.innerHTML = '<div class="card" style="width: 18rem;"><div class="card-body"><h5 class="card-title">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["display_name"]+'</h5><h6 class="card-subtitle mb-2 text-muted">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'</h6><p class="card-text">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["description"]+'</p><button class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["assembly_name"]+'</button><button class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["source"]+'</button>  </div></div>'
+                         tablecontainer.innerHTML = '<div class="card" style="width: 18rem;"><div class="card-body"><h5 class="card-title">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["display_name"]+'</h5><h6 class="card-subtitle mb-2 text-muted">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'</h6><p class="card-text">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["description"]+'</p><a href="https://asia.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g='+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'" class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["assembly_name"]+'</a><a href="https://asia.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g='+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'" class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["source"]+'</a>  </div></div>'
                          }
                     });
                     
