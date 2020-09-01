@@ -17,7 +17,7 @@ HTMLWidgets.widget({
         // set the dimensions and margins of the graph
         var margin = {top: 20, right: 30, bottom: 20, left: 10},
         width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        height = 500 - margin.top - margin.bottom;
       
         // append the svg object to the body of the page
         var svg = d3.select("#streamgraph")
@@ -55,7 +55,7 @@ HTMLWidgets.widget({
             .attr("x", 0)
             .attr("y", 0)
             .style("opacity", 0)
-            .style("font-size", 17)
+            .style("font-size", 14)
 
         // Three function that change the tooltip when user hover / move / leave a cell
         var mouseover = function(d) {
@@ -103,6 +103,11 @@ HTMLWidgets.widget({
             cy.edges().style('opacity','1');
         }
         
+        var ticks = []
+        for(var i=0;i<data.length;i++){
+            ticks.push(i+1)
+        }
+        
         // Area generator
         var area = d3.area()
             .y(function(d) { return y(d.data.Time); })
@@ -123,18 +128,19 @@ HTMLWidgets.widget({
             .on("mouseleave", mouseleave)
         
         svg.append("g")
-            .attr("transform", "translate("+width*0.7 + ",0)")
-            .call(d3.axisRight(y).tickSize(-width*.6).tickValues([1, 2, 3, 4]).tickFormat(d3.format("d")))
+            .attr("transform", "translate("+width*0.84 + ",0)")
+            .call(d3.axisRight(y).tickSize(-width*.7).tickValues(ticks).tickFormat(d3.format("d")))
             .select(".domain").remove()
         // Customization
-        svg.selectAll(".tick line").attr("stroke", "#000000")
+        svg.selectAll(".tick line").attr("stroke", "#000000").attr("stroke-width", "2")
+        svg.selectAll(".tick text").attr("font-size", "2em")
 
         svg.selectAll(".tick").on("mouseover", tickmouseover).on("mouseout", tickmouseout)
         // Add Y axis label:
         svg.append("text")
             .attr("text-anchor", "end")
             .attr("x", width)
-            .attr("y", 0 )
+            .attr("y", height-10)
             .text("Time point")
 
        
@@ -217,6 +223,7 @@ HTMLWidgets.widget({
                     
                     let mutdict = {}
                     function getGene(){
+                      if(jsdata["clone_labels"].length > 0){
                       for (var name of jsdata["clone_labels"]){
                         var request = new XMLHttpRequest();
                         request.open('GET', 'https://rest.ensembl.org/xrefs/symbol/homo_sapiens/'+name+'?content-type=application/json', false);
@@ -237,6 +244,7 @@ HTMLWidgets.widget({
                     }
                     
                     console.log(mutdict)
+                      }
                     }
                     getGene();
                     
@@ -255,6 +263,8 @@ HTMLWidgets.widget({
                         cy.$('#'+e.target.id()).style('opacity','1');
                         cy.$('#'+e.target.id()).target().style('opacity','1');
                         var str = "";
+
+                        if(cy.$('#'+e.target.id()).data()["name"] in mutdict) {
                         cy.$('#'+e.target.id()).target().predecessors().forEach(function( ele ){
                           ele.style('opacity','1');
                           if(ele.isEdge()){
@@ -263,9 +273,9 @@ HTMLWidgets.widget({
                             }
                           }
                         });
+                    }
                         console.log(str);
                         var tablecontainer =  document.getElementById("lacetable")
-                      console.log(tablecontainer)
                       
                       tablecontainer.innerHTML=str;
                     
@@ -280,10 +290,13 @@ HTMLWidgets.widget({
                     
                     cy.edges().on('cxttap',function(e){
                        if(cy.$('#'+e.target.id()).data()["name"] !== ""){
+                         if(cy.$('#'+e.target.id()).data()["name"] in mutdict){
                          console.log(mutdict[cy.$('#'+e.target.id()).data()["name"]])
                          var tablecontainer =  document.getElementById("lacetable")
                          tablecontainer.innerHTML = '<div class="card" style="width: 18rem;"><div class="card-body"><h5 class="card-title">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["display_name"]+'</h5><h6 class="card-subtitle mb-2 text-muted">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'</h6><p class="card-text">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["description"]+'</p><a href="https://asia.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g='+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'" class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["assembly_name"]+'</a><a href="https://asia.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g='+mutdict[cy.$('#'+e.target.id()).data()["name"]]["id"]+'" class="btn btn-outline-success" type="button">'+mutdict[cy.$('#'+e.target.id()).data()["name"]]["source"]+'</a>  </div></div>'
-                         }
+                         
+                       }
+                       }
                     });
                     
                     var makeTippy = function(node, text){

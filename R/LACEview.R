@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-LACEview <- function(inference, width = NULL, height = NULL, elementId = NULL) {
+LACEview <- function(inference,clone_labels, width = NULL, height = NULL, elementId = NULL) {
   B = inference$B
   adj_matrix = array(0L,c((dim(B)[1]-1),(dim(B)[2]-1)))
   rownames(adj_matrix) <- colnames(B)[(2:ncol(B))]
@@ -140,11 +140,12 @@ LACEview_html <- function(id, style, class, ...) {
     htmltools::div(
       # style = sprintf("display: flex; width:%s; height:%s;",width,height),
       id="container",
-      style = "display: flex; height:100%; width:100%;",
-      htmltools::div(style = "flex:35%;display:flex;align-items: center;height:100%;",id="cy"),
-      htmltools::div(style = "flex: 35%;display:flex;align-items: center;",id="streamgraph"),
-      htmltools::div(style = "flex: 30%;display:flex;align-items: center;",id="lacetable")
-    ))
+      style = "display: flex;height:500px; width:100%;",
+      htmltools::div(style = "flex:50%;display:flex;align-items: center;height:100%;",id="cy"),
+      htmltools::div(style = "flex: 50%;display:flex;align-items: center;",id="streamgraph"),
+    ),
+    htmltools::div(style = "height:200px;display:flex;align-items: center;justify-content:center;",id="lacetable")
+    )
   )
 }
 #' Shiny bindings for LACEview
