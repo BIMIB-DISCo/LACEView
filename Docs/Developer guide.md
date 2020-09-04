@@ -27,3 +27,11 @@
        
 > Most of the JS code will be soon be moved to atomic js files which will be added as dependencies
 
+### LACEview.R
+
+Contains the sizing policy, function to compute adjacency matrix, generate color codes, cytoscape node elements and more.
+
+
+### LACEview.js
+
+Contains all of the widget UI. The cytoscape window, streamgraph from D3, code to fetch Data from Ensembl, user interactions.
