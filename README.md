@@ -63,15 +63,26 @@ inference = LACE(D = longitudinal_sc_variants,
     num_processes = NA, 
     seed = 12345, 
     verbose = FALSE)
+clone_labels = c("ARPC2","PRAME","HNRNPC","COL1A2","RPL5","CCT8")
 ```
 instructions to RUN LACEview
 
 ```R
 library(LACEview)
-LACEview(inference)
+LACEview(inference,clone_labels)
 ```
 The default viewer is too small for LACEview kindly use the enlarged viewer 
 by clicking on the magnifying glass while using Rstudio.
 
 ![test](https://user-images.githubusercontent.com/52484030/89264978-70b7a500-d651-11ea-81c6-be3075ecb427.png)
+
+
+instructions to Run Other Datasets
+
+The LACE-UTILITIES repo contains two extra datasets with ready made inferences to be plotted using LACEview.
+[LACE Utils(https://github.com/BIMIB-DISCo/LACE-UTILITIES)
+```R
+load("~/PATH/TO/INFERENCE/inference.RData")
+LACEview(inference,c())
+```
 
