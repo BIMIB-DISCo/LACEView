@@ -74,10 +74,12 @@ LACEview(inference,clone_labels)
 The default viewer is too small for LACEview kindly use the enlarged viewer 
 by clicking on the magnifying glass while using Rstudio.
 
-![test](https://user-images.githubusercontent.com/52484030/89264978-70b7a500-d651-11ea-81c6-be3075ecb427.png)
+![test2](https://user-images.githubusercontent.com/52484030/92919743-aae54500-f44e-11ea-85e8-8cf08f67a7ab.png)
 
 
-instructions to Run Other Datasets
+
+Instructions to Run Other Datasets
+=================================
 
 The LACE-UTILITIES repo contains two extra datasets with ready made inferences to be plotted using LACEview.
 [LACE Utils(https://github.com/BIMIB-DISCo/LACE-UTILITIES)
